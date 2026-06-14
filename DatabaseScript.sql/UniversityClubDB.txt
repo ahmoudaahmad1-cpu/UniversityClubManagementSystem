@@ -1,0 +1,89 @@
+
+CREATE DATABASE UniversityClubDB;
+GO
+
+USE UniversityClubDB;
+GO
+
+CREATE TABLE Students
+(
+    StudentId INT IDENTITY(1,1) PRIMARY KEY,
+    FullName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) NOT NULL UNIQUE,
+    Username NVARCHAR(50) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(255) NOT NULL,
+    Phone NVARCHAR(20) NULL,
+    Major NVARCHAR(100) NULL,
+    IsBlocked BIT NOT NULL DEFAULT 0,
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE()
+);
+GO
+
+CREATE TABLE Admins
+(
+    AdminId INT IDENTITY(1,1) PRIMARY KEY,
+    Username NVARCHAR(50) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(255) NOT NULL
+);
+GO
+
+CREATE TABLE Clubs
+(
+    ClubId INT IDENTITY(1,1) PRIMARY KEY,
+    ClubName NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(MAX) NULL,
+    Category NVARCHAR(100) NOT NULL,
+    PresidentName NVARCHAR(100) NOT NULL,
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
+    IsActive BIT NOT NULL DEFAULT 1
+);
+GO
+
+CREATE TABLE Activities
+(
+    ActivityId INT IDENTITY(1,1) PRIMARY KEY,
+    ClubId INT NOT NULL,
+    ActivityTitle NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(MAX) NULL,
+    ActivityDate DATETIME NOT NULL,
+    Location NVARCHAR(100) NOT NULL,
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Activities_Clubs FOREIGN KEY (ClubId) REFERENCES Clubs(ClubId) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE Memberships
+(
+    MembershipId INT IDENTITY(1,1) PRIMARY KEY,
+    StudentId INT NOT NULL,
+    ClubId INT NOT NULL,
+    JoinDate DATETIME NOT NULL DEFAULT GETDATE(),
+    Status NVARCHAR(50) NOT NULL DEFAULT 'Pending',
+    CONSTRAINT FK_Memberships_Students FOREIGN KEY (StudentId) REFERENCES Students(StudentId) ON DELETE CASCADE,
+    CONSTRAINT FK_Memberships_Clubs FOREIGN KEY (ClubId) REFERENCES Clubs(ClubId) ON DELETE NO ACTION
+);
+GO
+
+INSERT INTO Admins (Username, PasswordHash)
+VALUES ('admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9');
+GO
+
+INSERT INTO Students (FullName, Email, Username, PasswordHash, Phone, Major, IsBlocked, CreatedDate)
+VALUES ('Sarah Johnson', 'sarah@university.edu', 'student1', '703b0a3d6ad75b649a28adde7d83c6251da457549263bc7ff45ec709b0a8448b', '555-0101', 'Computer Science', 0, GETDATE());
+GO
+
+INSERT INTO Clubs (ClubName, Description, Category, PresidentName, CreatedDate, IsActive)
+VALUES
+('Programming Club', 'Learn coding, hackathons, and software projects.', 'Technology', 'Alex Martin', GETDATE(), 1),
+('Debate Society', 'Public speaking, debates, and leadership skills.', 'Academic', 'Emily Carter', GETDATE(), 1),
+('Photography Club', 'Photo walks, exhibitions, and camera workshops.', 'Arts', 'James Lee', GETDATE(), 1),
+('Sports Club', 'Football, basketball, and fitness events.', 'Sports', 'Michael Brown', GETDATE(), 1);
+GO
+
+INSERT INTO Activities (ClubId, ActivityTitle, Description, ActivityDate, Location, CreatedDate)
+VALUES
+(1, 'Coding Workshop', 'Introduction to C# and Web Forms.', DATEADD(day, 7, GETDATE()), 'Lab 201', GETDATE()),
+(1, 'Hackathon Night', '24-hour coding competition.', DATEADD(day, 14, GETDATE()), 'Main Hall', GETDATE()),
+(2, 'Debate Competition', 'Inter-university debate event.', DATEADD(day, 10, GETDATE()), 'Auditorium A', GETDATE()),
+(3, 'Photo Exhibition', 'Student photography showcase.', DATEADD(day, 5, GETDATE()), 'Art Gallery', GETDATE());
+GO
