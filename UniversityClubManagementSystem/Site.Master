@@ -1,0 +1,57 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="UniversityClubManagementSystem.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - University Club Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/CSS/style.css" rel="stylesheet" runat="server" />
+</head>
+<body>
+    <form runat="server">
+        <header class="navbar navbar-expand-lg navbar-dark" style="background-color:#1e3a8a;">
+            <div class="container">
+                <a class="navbar-brand fw-bold" runat="server" href="~/Default.aspx">University Clubs</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav ms-auto">
+                        <% if (Session["AdminId"] != null) { %>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Admin/Dashboard.aspx">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Admin/ManageClubs.aspx">Manage Clubs</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Admin/ManageActivities.aspx">Manage Activities</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Admin/ManageStudents.aspx">Manage Students</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Admin/ManageMemberships.aspx">Manage Memberships</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Logout.aspx">Logout</a></li>
+                        <% } else if (Session["StudentId"] != null) { %>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Home.aspx">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Clubs.aspx">Clubs</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Activities.aspx">Activities</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/MyMemberships.aspx">My Memberships</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/StudentProfile.aspx">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Logout.aspx">Logout</a></li>
+                        <% } else { %>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Default.aspx">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Clubs.aspx">Clubs</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Login.aspx">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Register.aspx">Register</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <main class="container py-4">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </main>
+        <footer class="bg-light border-top py-3 mt-auto">
+            <div class="container text-center text-muted">
+                <p class="mb-0">&copy; <%: DateTime.Now.Year %> University Club Management System</p>
+            </div>
+        </footer>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
